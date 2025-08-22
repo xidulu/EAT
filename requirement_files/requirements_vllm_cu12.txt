@@ -1,0 +1,16 @@
+--index-url https://pypi.netflix.net/simple
+--extra-index-url https://download.pytorch.org/whl/cu124
+# --extra-index-url https://download.pytorch.org/whl/cu128
+--extra-index-url https://pypi.org/simple/
+
+randomname
+training_toolkit
+nflx-manta
+tqdm
+# torch==2.6.0+cu124 # If we remove torch here, then we get back to vllm 0.9.1
+vllm
+transformers
+sentence-transformers
+datasets
+# FlashInfer
+# flashinfer-python
