@@ -103,3 +103,13 @@ def load_humaneval():
         for prompt in dataset["prompt"]
     ]
     return convs
+
+
+dataset_mapping = {
+    "math500": load_math500,
+    "aime2025": load_aime2025,
+    "aime2025_2": load_aime2025_2,
+    "gpqa": load_gpqa,
+    'human_eval': load_humaneval,
+    'gpqa_mc': load_gpqa_mc,
+}

@@ -1,0 +1,5 @@
+numpy
+vllm
+transformers
+sentence-transformers
+datasets

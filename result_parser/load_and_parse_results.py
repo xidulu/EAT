@@ -6,7 +6,7 @@ from transformers import AutoTokenizer
 
 argparse = argparse.ArgumentParser()
 argparse.add_argument('--folder_name', type=str)
-argparse.add_argument('--save_name', type=str)
+argparse.add_argument('--save_dir', type=str)
 argparse.add_argument('--num_seed', type=int, default=8)
 argparse.add_argument('--no_seed', action='store_true')
 argparse.add_argument('--max_num', type=int, default=500)
@@ -14,7 +14,7 @@ argparse.add_argument('--min_num', type=int, default=-1)
 args = argparse.parse_args()
 
 folder_name = args.folder_name
-save_name = args.save_name
+save_dir = args.save_dir
 num_seed = args.num_seed
 max_num = args.max_num
 min_num = args.min_num
@@ -33,32 +33,12 @@ from sal.utils.math import (
 from tqdm import tqdm
 from datasets import Dataset, load_dataset
 
-import boto3
 import json
-def download_and_load_json(full_path, local_path):
-    file_dir = full_path
-    bucket_name, key = file_dir.replace('s3://', '').split('/', 1)
-    s3 = boto3.client('s3')
-    # Remove local_path if it exists
-    try:
-        os.remove(local_path)
-    except OSError:
-        pass
-    try:
-        s3.download_file(bucket_name, key, local_path)
-    except Exception as e:
-        print(f"Error downloading file: {e}")
-        print(key)
-
-    # print(f"File downloaded to {local_path}")
+def download_and_load_json(full_path):
     model_responses = []
-    with open(local_path, 'r', encoding='utf-8') as f:
+    with open(full_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
         return data
-
-def eval_pass_at_k(candidates, answer, k):
-    pass
-
 
 dataset_name = "HuggingFaceH4/MATH-500"
 dataset_split = "test"
@@ -85,15 +65,15 @@ for qid in range(max_num):
         continue
     all_answers = []
     if args.no_seed:
-        file_dir = f's3://netflix-dataoven-prod-users/xiw/dpsk_math_eval/{folder_name}/output_{qid}_multi_ans.json'
-        F = download_and_load_json(file_dir, f'/tmp/answers_{save_name}.json')
+        file_dir = f'{folder_name}/output_{qid}_multi_ans.json'
+        F = download_and_load_json(file_dir)
         all_answers.append(F)
         num_seed = 1
     else:
         for seed in all_seeds:
         # file_dir = f's3://netflix-dataoven-prod-users/xiw/dpsk_math_eval/dpsk_new_det_with_final_answer/seed_{seed}/answers_{qid}.json'
-            file_dir = f's3://netflix-dataoven-prod-users/xiw/dpsk_math_eval/{folder_name}/seed_{seed}/answers_{qid}.json'
-            F = download_and_load_json(file_dir, f'/tmp/answers_{save_name}.json')
+            file_dir = f'{folder_name}/seed_{seed}/answers_{qid}.json'
+            F = download_and_load_json(file_dir)
             all_answers.append(F)
 
     all_answers = np.array(all_answers)
@@ -121,7 +101,7 @@ for qid in range(max_num):
     all_answer_len.append(_answer_lens)
 
 
-    tmp_dir = f'/root/tts_and_entropy/outputs/cached_results{save_name}'
+    tmp_dir = save_dir
 
     if not os.path.exists(tmp_dir):
         os.makedirs(tmp_dir)

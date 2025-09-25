@@ -16,7 +16,6 @@ from generation_utils import (
     # compute_diversity
     # calculate_conditional_perplexity_with_kv_cache
 )
-from utils import aws_s3_sync
 
 if not hasattr(modeling_utils, "ALL_PARALLEL_STYLES") or modeling_utils.ALL_PARALLEL_STYLES is None:
     modeling_utils.ALL_PARALLEL_STYLES = ["tp", "none","colwise",'rowwise']
@@ -63,6 +62,19 @@ def main(seed, model_name, num_newline, log_file_name, save_dir_name, N):
         ):
         # if qid < 380:
         #     continue
+        local_save_dir = '/tmp'
+        file_name = f'answers_{qid}.json'
+        folder_name = f'{save_dir_name}/seed_{args.seed}'
+
+        save_dir = os.path.join(local_save_dir, folder_name)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+        save_path = os.path.join(save_dir, file_name)
+        print(save_path)
+        if os.path.exists(save_path):
+            print(f"Already exists {save_path}, skip!")
+            continue
+
         model_response = (row['response'])
         model_response = model_response.split('</think>')[0]
         header = model_response.split("<think>")[0] + "<think>\n"
@@ -90,30 +102,9 @@ def main(seed, model_name, num_newline, log_file_name, save_dir_name, N):
             answer_per_step.append(early_stop_answers)
         # all_answers.append(answer_per_step)
 
-
-        local_save_dir = '/tmp'
-        s3_save_dir_base = 's3://netflix-dataoven-prod-users/xiw/dpsk_math_eval/'
-        file_name = f'answers_{qid}.json'
-        folder_name = f'{save_dir_name}/seed_{args.seed}'
-        # folder_name = f'dpsk_new_det_with_final_answer/seed_{args.seed}' # In this folder, we add "final answer" in the end of thinking
-
-        save_dir = os.path.join(local_save_dir, folder_name)
-        if not os.path.exists(save_dir):
-            os.makedirs(save_dir)
-
-        with open(os.path.join(save_dir, file_name), 'w') as f:
+        with open(save_path, 'w') as f:
             json.dump(answer_per_step, f, indent=4)
 
-        s3_save_dir_full = os.path.join(s3_save_dir_base, folder_name)
-
-        print(save_dir)
-        print(s3_save_dir_full)
-
-        aws_s3_sync(
-            save_dir,
-            s3_save_dir_full,
-            only_show_errors=False,
-        )
 
 if __name__ == "__main__":
     import argparse
