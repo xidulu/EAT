@@ -133,6 +133,6 @@ for qid, row in tqdm(
     
     _save_name = save_name.format(qid)
     np.save(
-        os.path.join(save_dir, _save_name), # New: With bigram entropy included
+        os.path.join(save_dir, _save_name),
         entropy
     )
