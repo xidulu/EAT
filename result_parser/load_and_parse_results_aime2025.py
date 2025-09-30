@@ -23,7 +23,7 @@ model_name = "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 
-from sal.utils.math import (
+from sal.math import (
     find_majority_answer, extract_completion_answers,
     memoized_canonical_form, find_answer_with_largest_sum,
     strip_string
