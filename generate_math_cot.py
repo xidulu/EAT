@@ -32,6 +32,7 @@ def recipe_main(config):
     model = model_name_mapper[_model_name]
     do_sample = config.do_sample
     dataset_name = config.dataset_name
+    save_dir = config.save_dir
     if do_sample:
         decode_config = deepseek_decode_config
     else:
@@ -77,7 +78,7 @@ def recipe_main(config):
         save_file_name += "output_long_long.json"
     else:
         save_file_name += "output_long.json"
-    local_save_dir = '/home/xwang457/work/eat_data/data/reasoning_chains'
+    local_save_dir = save_dir
     local_save_dir = os.path.join(local_save_dir, save_file_name)
     with open(local_save_dir, "w") as f:
         for output in model_outputs:
@@ -94,6 +95,7 @@ def main() -> None:
     parser.add_argument('--seed', type=int, default=42, help='random seed')
     parser.add_argument('--do_sample', action='store_true', help='whether to do sampling')
     parser.add_argument('--dataset_name', type=str, default='math500', help='dataset name')
+    parser.add_argument('--save_dir', type=str, default='./reasoning_chains/', help='directory to save generated rollouts')
     args = parser.parse_args()
     config = args
     print(config)

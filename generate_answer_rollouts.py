@@ -37,7 +37,7 @@ def main(seed, model_name, num_newline, log_file_name, save_dir_name, N):
     save_dir = f'./math_outputs'
 
     # model_solutions_dir = f"./model_solutions/{log_file_name}"
-    model_solutions_dir = f"./required_files/{log_file_name}"
+    model_solutions_dir = log_file_name
     model_solutions = []
     with open(model_solutions_dir, 'r') as f:
         for line in f:
@@ -62,11 +62,10 @@ def main(seed, model_name, num_newline, log_file_name, save_dir_name, N):
         ):
         # if qid < 380:
         #     continue
-        local_save_dir = '/tmp'
         file_name = f'answers_{qid}.json'
         folder_name = f'{save_dir_name}/seed_{args.seed}'
 
-        save_dir = os.path.join(local_save_dir, folder_name)
+        save_dir = folder_name
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
         save_path = os.path.join(save_dir, file_name)
