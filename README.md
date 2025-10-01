@@ -1,8 +1,8 @@
 # EAT
 
-Code for EAT: Entropy After `</Think>` for reasoning model early exiting. (PAPER LINK)
+Code for EAT: Entropy After `</Think>` for reasoning model early exiting. (https://arxiv.org/abs/2509.26522))
 
-The full dataset can be found at [text](https://huggingface.co/datasets/xidulu/eat_rollouts)
+The full dataset can be [found here](https://huggingface.co/datasets/xidulu/eat_rollouts)
 
 
 # To setup environment
