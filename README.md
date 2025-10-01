@@ -26,8 +26,9 @@ python generate_math_cot.py --model dpsk_new \
 
 **generate_answer_rollouts.py**:
 ```bash
-# Take in a reasoning chain file and generate answer rollouts for each reasoning step (split by \n\n)
-# by appending "</think> Final answer:" and let the model generates till <EoS>.
+# Take in a reasoning chain file and generate answer rollouts for each
+# reasoning step (split by \n\n) by appending "</think> Final answer:"
+# and let the model generates till <EoS>.
 # By default each seed will generate 16 rollouts per reasoning step.
 # Example of generating 128 rollouts per step:
 for seed in {0..7}
@@ -47,8 +48,31 @@ PYTHONPATH=. python result_parser/load_and_parse_results_math500.py \
 --save_dir ./cached_results_DeepSeek-R1-0528-Qwen3-8B_math500_math500 \
 --max_num 200 --num_seed 4 --min_num 0
 ```
+the script above will parse all the json files in the folder and compute the Pass@1 (Avg@128)
+at each reasoning step and save the results in the save_dir.
 
-the script above will parse all the json files in the folder and compute the Pass@1 (Avg@128) at each reasoning step and save the results in the save_dir.
+## Compute EAT
+Given a reasoning trajectory, we compute the Entropy After `</think>` in a posthoc way,
+i.e. instead of actually computing it online, we first generate a long reasoning chain,
+then we compute the signal at different positions. 
+In particular, we split the reasoning process at `\n\n`.
+
+The script `compute_entropy_ngram.py` is for this purpose,
+```bash
+python compute_entropy_ngram.py \
+    --model_solution_dir DeepSeek-R1-0528-Qwen3-8B_math500.json\
+    --eval_model dpsk_new \
+    --save_dir ./entropy_log \
+    --save_name DeepSeek-R1-0528-Qwen3-8B_math500WithFinalAns \
+    --gpu 0 \
+    --include_final_answer_str \
+```
+
+The `eval_model` flag specifies which model to use for computing entropy,
+`--include_final_answer_str` specifies whether a `'Final answer: '` string is included when computing
+the entropy.
+
+## Early stopping with EMA
 
 ## Utils
 
