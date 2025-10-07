@@ -1,6 +1,15 @@
 # EAT
 
-Code for EAT: Entropy After `</Think>` for reasoning model early exiting. (https://arxiv.org/abs/2509.26522))
+Code for EAT: Entropy After `</Think>` for reasoning model early exiting. (https://arxiv.org/abs/2509.26522)
+
+```
+@article{wang2025entropy,
+  title={Entropy After $\langle \texttt{/Think}\rangle $ for reasoning model early exiting},
+  author={\textbf{Xi Wang} and McInerney, James and Wang, Lequn and Kallus, Nathan},
+  journal={arXiv preprint arXiv:2509.26522},
+  year={2025}
+}
+```
 
 The full dataset can be [found here](https://huggingface.co/datasets/xidulu/eat_rollouts)
 
@@ -88,3 +97,5 @@ the entropy.
 
 
 # To reproduce the results
+
+TODO
