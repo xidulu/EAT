@@ -5,7 +5,7 @@ Code for EAT: Entropy After `</Think>` for reasoning model early exiting. (https
 ```
 @article{wang2025entropy,
   title={Entropy After $\langle \texttt{/Think}\rangle $ for reasoning model early exiting},
-  author={\textbf{Xi Wang} and McInerney, James and Wang, Lequn and Kallus, Nathan},
+  author={Wang, Xi and McInerney, James and Wang, Lequn and Kallus, Nathan},
   journal={arXiv preprint arXiv:2509.26522},
   year={2025}
 }
