@@ -55,8 +55,6 @@ def simple_moving_average_variance(data, window_size=10):
     return moving_var
 
 def choose_early_stop_point(entropy, timescale, threshold, min_distance=25, ema_0=0.0, min_value_threshold=None, normalize=False):
-    # if normalize:
-    #     entropy = entropy / entropy[:2].mean()
     ema_variance = exponential_moving_variance(entropy, timescale, ema_0, normalize=normalize)
     if min_distance > len(entropy):
         return -1

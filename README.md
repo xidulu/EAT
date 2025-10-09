@@ -83,6 +83,30 @@ the entropy.
 
 ## Early stopping with EMA
 
+The helper function for early stopping with EMA (in a post-hoc way) is in `early_stopping_utils.py`.
+The main utility function is `choose_early_stop_point`, which takes in a 1D numpy array of EAT values
+and returns the early stopping point (index) based on the EMA strategy.
+
+```python
+def choose_early_stop_point(entropy, timescale, threshold, min_distance=25, ema_0=0.0, min_value_threshold=None, normalize=False):
+    ema_variance = exponential_moving_variance(entropy, timescale, ema_0, normalize=normalize)
+    if min_distance > len(entropy):
+        return -1
+    if min_value_threshold is not None:
+        min_value_pos = np.argmax(entropy < min_value_threshold)
+        min_distance = max(min_value_pos, min_distance)
+    exit_idx = get_early_stop_point_posthoc(ema_variance, threshold, min_distance, normalize=normalize)
+    return exit_idx if exit_idx is not None else -1
+```
+
+The key parameters are:
+- `timescale` (\alpha): the timescale for EMA
+- `threshold` (\delta): the threshold for EMA variance to trigger early stopping
+- `min_distance`: the minimum distance from the start to consider early stopping, typically set as 4 / \alpha for EMA warming up.
+
+The function returns -1 if no early stopping point is found.
+
+
 ## Utils
 
 **dataset_utils.py**
